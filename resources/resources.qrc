@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style_light.qss</file>
+        <file>style_dark.qss</file>
+        <file>app_icon.png</file>
+        <file>app_icon.ico</file>
+        <file>autoflow_en.qm</file>
+        <file>autoflow_fr.qm</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,33 @@
+{
+  "name": "MVP 演示：打开网页→请求→变量→循环→条件",
+  "variables": {},
+  "settings": {},
+  "nodes": [
+    { "id": "start", "instr": "start", "params": {}, "x": 60, "y": 120 },
+    { "id": "n1", "instr": "log", "params": { "text": "开始演示流程" }, "x": 60, "y": 210 },
+    { "id": "n2", "instr": "openurl", "params": { "url": "https://www.baidu.com" }, "x": 60, "y": 300 },
+    { "id": "n3", "instr": "delay", "params": { "ms": "1500" }, "x": 60, "y": 390 },
+    { "id": "n4", "instr": "http", "params": { "method": "GET", "url": "http://example.com", "saveVar": "httpResult", "saveStatus": "httpStatus", "timeout": "8000" }, "x": 60, "y": 480 },
+    { "id": "n5", "instr": "log", "params": { "text": "HTTP 状态码 = ${httpStatus}" }, "x": 60, "y": 570 },
+    { "id": "n6", "instr": "setvar", "params": { "name": "count", "value": "3", "type": "number" }, "x": 60, "y": 660 },
+    { "id": "n7", "instr": "loop", "params": { "count": "2", "indexVar": "i", "body": { "nodes": [ { "id": "b1", "instr": "log", "params": { "text": "循环第 ${i} 次" } } ], "edges": [] } }, "x": 60, "y": 750 },
+    { "id": "n8", "instr": "if", "params": { "left": "${count}", "op": ">=", "right": "2" }, "x": 60, "y": 840 },
+    { "id": "n9", "instr": "log", "params": { "text": "条件为真：count>=2" }, "x": 360, "y": 760 },
+    { "id": "n10", "instr": "log", "params": { "text": "条件为假" }, "x": 360, "y": 920 },
+    { "id": "n11", "instr": "end", "params": {}, "x": 360, "y": 840 }
+  ],
+  "edges": [
+    { "from": "start", "to": "n1", "label": "next" },
+    { "from": "n1", "to": "n2", "label": "next" },
+    { "from": "n2", "to": "n3", "label": "next" },
+    { "from": "n3", "to": "n4", "label": "next" },
+    { "from": "n4", "to": "n5", "label": "next" },
+    { "from": "n5", "to": "n6", "label": "next" },
+    { "from": "n6", "to": "n7", "label": "next" },
+    { "from": "n7", "to": "n8", "label": "next" },
+    { "from": "n8", "to": "n9", "label": "真" },
+    { "from": "n8", "to": "n10", "label": "假" },
+    { "from": "n9", "to": "n11", "label": "next" },
+    { "from": "n10", "to": "n11", "label": "next" }
+  ]
+}

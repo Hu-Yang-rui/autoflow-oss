@@ -1,0 +1,27 @@
+{
+  "name": "逻辑自测流程",
+  "variables": {},
+  "settings": {},
+  "nodes": [
+    { "id": "start", "instr": "start", "params": {}, "x": 90, "y": 140 },
+    { "id": "n1", "instr": "setvar", "params": { "name": "count", "value": "2", "type": "number" }, "x": 90, "y": 230 },
+    { "id": "n2", "instr": "log", "params": { "text": "当前计数 = ${count}" }, "x": 90, "y": 320 },
+    { "id": "n3", "instr": "if", "params": { "left": "${count}", "op": ">=", "right": "2" }, "x": 90, "y": 410 },
+    { "id": "n4", "instr": "log", "params": { "text": "分支真：count >= 2" }, "x": 380, "y": 320 },
+    { "id": "n5", "instr": "log", "params": { "text": "分支假" }, "x": 380, "y": 500 },
+    { "id": "n6", "instr": "loop", "params": { "count": "2", "indexVar": "i", "body": { "nodes": [ { "id": "b1", "instr": "log", "params": { "text": "循环第 ${i} 次" } } ], "edges": [] } }, "x": 380, "y": 230 },
+    { "id": "n7", "instr": "delay", "params": { "ms": "20" }, "x": 640, "y": 230 },
+    { "id": "n8", "instr": "end", "params": {}, "x": 640, "y": 340 }
+  ],
+  "edges": [
+    { "from": "start", "to": "n1", "label": "next" },
+    { "from": "n1", "to": "n2", "label": "next" },
+    { "from": "n2", "to": "n3", "label": "next" },
+    { "from": "n3", "to": "n4", "label": "真" },
+    { "from": "n3", "to": "n5", "label": "假" },
+    { "from": "n4", "to": "n6", "label": "next" },
+    { "from": "n5", "to": "n6", "label": "next" },
+    { "from": "n6", "to": "n7", "label": "next" },
+    { "from": "n7", "to": "n8", "label": "next" }
+  ]
+}

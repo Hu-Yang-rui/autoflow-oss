@@ -1,0 +1,24 @@
+{
+  "name": "验收示例：打开网页→等待加载→截图识别→写入Excel（需 Phase2/3 依赖）",
+  "variables": {},
+  "settings": {},
+  "nodes": [
+    { "id": "start", "instr": "start", "params": {}, "x": 60, "y": 120 },
+    { "id": "n1", "instr": "openurl", "params": { "url": "https://www.baidu.com" }, "x": 60, "y": 210 },
+    { "id": "n2", "instr": "delay", "params": { "ms": "3000" }, "x": 60, "y": 300 },
+    { "id": "n3", "instr": "findimage", "params": { "template": "assets/logo.png", "threshold": "0.85", "saveVar": "match", "clickIfFound": "false" }, "x": 60, "y": 390 },
+    { "id": "n4", "instr": "ocr", "params": { "image": "", "saveVar": "ocrText" }, "x": 60, "y": 480 },
+    { "id": "n5", "instr": "setvar", "params": { "name": "title", "value": "${ocrText}", "type": "string" }, "x": 60, "y": 570 },
+    { "id": "n6", "instr": "excel", "params": { "path": "output.xlsx", "sheet": "结果", "data": "标题,状态\n${title},成功" }, "x": 60, "y": 660 },
+    { "id": "n7", "instr": "end", "params": {}, "x": 60, "y": 750 }
+  ],
+  "edges": [
+    { "from": "start", "to": "n1", "label": "next" },
+    { "from": "n1", "to": "n2", "label": "next" },
+    { "from": "n2", "to": "n3", "label": "next" },
+    { "from": "n3", "to": "n4", "label": "next" },
+    { "from": "n4", "to": "n5", "label": "next" },
+    { "from": "n5", "to": "n6", "label": "next" },
+    { "from": "n6", "to": "n7", "label": "next" }
+  ]
+}

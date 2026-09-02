@@ -1,91 +1,95 @@
 # AutoFlow ⚡
 
-> A visual desktop automation tool (RPA) for non-programmers — drag, connect, and run. No code required.
+> 面向零基础用户的可视化桌面自动化工具（RPA）——拖拽指令、连线编排、一键运行，无需写代码。
 
 <p align="center">
-  <img src="https://img.shields.io/badge/C%2B%2B-20-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" alt="C++20">
-  <img src="https://img.shields.io/badge/Qt-6.8-41CD52?style=flat-square&logo=qt&logoColor=white" alt="Qt 6.8">
-  <img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Windows">
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
+  <strong>中文</strong> · <a href="./README.en.md">English</a>
 </p>
 
-AutoFlow is a Windows desktop RPA-style tool: drag instruction nodes from the left panel onto the canvas, connect them into a flowchart, configure parameters, and hit run — to automate tasks such as "open a webpage → wait for it to load → screenshot recognition → click / write to a file".
+<p align="center">
+  <a href="https://isocpp.org/"><img src="https://img.shields.io/badge/C%2B%2B-20-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" alt="C++20"></a>
+  <a href="https://www.qt.io/"><img src="https://img.shields.io/badge/Qt-6.8-41CD52?style=flat-square&logo=qt&logoColor=white" alt="Qt 6.8"></a>
+  <a href="https://www.microsoft.com/windows"><img src="https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white" alt="Windows"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License"></a>
+</p>
 
-## 📑 Table of Contents
+AutoFlow 是一款 Windows 桌面端 RPA 类工具：用户从左侧指令面板拖拽指令到画布，用连线编排成流程图，配置参数后一键运行，即可自动完成「打开网页 → 等待加载 → 截图识别 → 点击 / 写入文件」等任务。
 
-- [✨ Features](#-features)
-- [📸 Screenshots](#-screenshots)
-- [🛠 Tech Stack](#-tech-stack)
-- [📁 Project Structure](#-project-structure)
-- [🏗 Architecture](#-architecture)
-- [📄 License](#-license)
-- [⚠️ Disclaimer](#️-disclaimer)
+## 📑 目录
 
-## ✨ Features
+- [✨ 特性](#-特性)
+- [📸 界面预览](#-界面预览)
+- [🛠 技术栈](#-技术栈)
+- [📁 目录结构](#-目录结构)
+- [🏗 架构](#-架构)
+- [📄 许可证](#-许可证)
+- [⚠️ 免责声明](#️-免责声明)
 
-- **Pure C++ / Qt 6** — framework, business logic, and styling are all C++; the UI uses Qt Widgets + QSS.
-- **Drag-and-drop flow editing** — instructions are grouped into Image / Input / Data / Flow / AI, composed as nodes and edges into a visual flowchart.
-- **Local OCR (offline & free)** — built on the Windows built-in OCR (`Windows.Media.Ocr`). It can read a whole screen of text, or **locate a given text and click it**, with zero external dependencies, no network, and no token cost.
-- **Plugin-style instructions** — adding a new instruction only requires implementing an `IInstruction` subclass and registering it; the core engine stays untouched.
-- **Variable system** — string / number / boolean / list / object, referenced via `${var}` and `${obj.key}`, with a live variable panel.
-- **Four flow structures** — conditional branch (true / false), loop, jump, and sub-flow.
-- **Real-time logs & variable monitoring** — each step's success / failure and duration are listed, and the running node is highlighted.
+## ✨ 特性
 
-## 📸 Screenshots
+- **纯 C++ / Qt 6**：框架、业务、样式全部使用 C++，UI 采用 Qt Widgets + QSS。
+- **拖拽式流程编排**：指令按「图像 / 键鼠 / 数据 / 流程 / AI」五类分组，以节点 + 连线组成可视化流程图。
+- **本地 OCR（离线免费）**：基于 Windows 内置 OCR（Windows.Media.Ocr），可识别整页文字，也可**定位指定文字并点击**，零外部依赖、不联网、不消耗 token。
+- **指令插件化**：新增指令只需实现 `IInstruction` 子类并注册，核心引擎无需改动。
+- **变量系统**：支持字符串 / 数字 / 布尔 / 列表 / 对象，`${var}`、`${obj.key}` 引用，运行面板实时查看。
+- **四种流程结构**：条件分支（真 / 假）、循环、跳转、子流程。
+- **实时日志与变量监控**：每步成功 / 失败与耗时逐条展示，运行中节点高亮。
 
-<!-- Add software screenshots or a GIF demo here -->
+## 📸 界面预览
 
-## 🛠 Tech Stack
+<!-- 在此处添加软件截图或 GIF 演示 -->
 
-| Area | Choice | Notes |
+## 🛠 技术栈
+
+| 项 | 选型 | 说明 |
 |---|---|---|
-| Language | C++20 | No Python / Java / C# / JS |
-| UI | Qt 6 Widgets + QSS | Styles live in `resources/*.qss` |
-| OCR | Windows built-in OCR (`Windows.Media.Ocr`) | Offline & free, can locate text coordinates |
-| Image recognition | OpenCV (optional) | Template matching, `AUTOPLOW_WITH_OPENCV` flag |
-| Color detection | Win32 (built-in) | No extra dependency |
-| HTTP | WinINET (system API) | Reads the system proxy automatically |
-| JSON | nlohmann/json | header-only, vendored |
-| Excel | libxlsxwriter (optional) | `AUTOPLOW_WITH_XLSXWRITER` flag |
-| Input simulation | Win32 `SendInput` / `SetCursorPos` | Built-in |
-| Screen capture | Win32 `BitBlt` | Built-in |
-| Build | CMake + Ninja + MSVC | Single-directory portable `.exe` |
+| 语言 | C++20 | 无 Python / Java / C# / JS |
+| UI | Qt 6 Widgets + QSS | 样式集中在 `resources/*.qss` |
+| OCR | Windows 内置 OCR（Windows.Media.Ocr） | 离线免费，可定位文字坐标 |
+| 图像识别 | OpenCV（可选） | 模板匹配找图，`AUTOPLOW_WITH_OPENCV` 开关 |
+| 找色 | Win32（内置） | 无需额外依赖 |
+| HTTP | WinINET（系统 API） | 自动读取系统代理 |
+| JSON | nlohmann/json | header-only，已 vendor |
+| Excel | libxlsxwriter（可选） | `AUTOPLOW_WITH_XLSXWRITER` 开关 |
+| 键鼠模拟 | Win32 `SendInput` / `SetCursorPos` | 内置 |
+| 屏幕抓取 | Win32 `BitBlt` | 内置 |
+| 构建 | CMake + Ninja + MSVC | 产物为单目录绿色 `.exe` |
 
-## 📁 Project Structure
+## 📁 目录结构
 
 ```
 autoflow-oss/
 ├── CMakeLists.txt / build.bat / release.bat
-├── third_party/          # nlohmann/json (header-only)
-├── resources/            # icons / light & dark QSS / translations / qrc
-├── examples/             # example flows (.json)
+├── third_party/          # nlohmann/json（header-only）
+├── resources/            # 图标 / 深浅色 QSS / 翻译 / qrc
+├── examples/             # 示例流程（.json）
 └── src/
-    ├── main.cpp          # entry point
-    ├── core/             # engine: variables / expressions / flow model / execution engine / records / scheduler
-    ├── instructions/     # instructions: IInstruction interface + registry + built-ins
-    ├── infra/            # infrastructure: input / screen / HTTP / OCR / image / Excel
-    └── ui/               # UI: main window / canvas / nodes / edges / param panel / log / variables / theme
+    ├── main.cpp          # 入口
+    ├── core/             # 引擎层：变量 / 表达式 / 流程模型 / 执行引擎 / 运行记录 / 调度器
+    ├── instructions/     # 指令层：IInstruction 接口 + 注册表 + 内置指令
+    ├── infra/            # 基础设施：键鼠 / 屏幕 / HTTP / OCR / 图像 / Excel
+    └── ui/               # UI：主窗口 / 画布 / 节点 / 连线 / 参数面板 / 日志 / 变量 / 主题
 ```
 
-## 🏗 Architecture
+## 🏗 架构
 
 ```
-UI layer (Qt Widgets + QSS)
-   ↓ signals / slots
-Engine layer (FlowModel parsing + ExecutionEngine background-thread scheduling)
-   ↓ plugin interface IInstruction::execute(ctx, params)
-Instruction layer (registry + built-in instructions)
+UI 层（Qt Widgets + QSS）
+   ↓ 信号 / 槽
+引擎层（FlowModel 解析 + ExecutionEngine 后台线程调度）
+   ↓ 插件接口 IInstruction::execute(ctx, params)
+指令层（注册表 + 内置指令）
    ↓
-Infrastructure layer (OCR / OpenCV / SendInput / BitBlt / WinINET)
+基础设施层（OCR / OpenCV / SendInput / BitBlt / WinINET）
 ```
 
-- The execution engine runs on a `std::thread` and reports progress via signals, so the UI never freezes.
-- Instruction metadata (name / category / parameter schema / output ports) automatically drives the instruction panel, parameter panel, and canvas rendering.
+- 执行引擎在 `std::thread` 后台运行，通过信号回报进度，界面不卡顿。
+- 指令元数据（名称 / 分类 / 参数 schema / 输出端口）自动驱动指令面板、参数面板与画布渲染。
 
-## 📄 License
+## 📄 许可证
 
 [MIT](./LICENSE)
 
-## ⚠️ Disclaimer
+## ⚠️ 免责声明
 
-This project is AI-generated; the content may contain shortcomings or quality issues. Your understanding is appreciated.
+本项目由 AI 生成，内容可能存在不足或质量问题，敬请谅解。

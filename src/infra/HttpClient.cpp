@@ -43,8 +43,8 @@ static HttpResponse wininetRequest(const std::string& method, const std::string&
         return out;
     }
 
-    // 创建 session（WinINET 自动使用 IE 系统代理，和 PowerShell 一致）
-    HINTERNET hSession = InternetOpenW(L"AutoFlow/1.0", INTERNET_OPEN_TYPE_PRECONFIG,
+    // 创建 session（直连，不走系统代理）
+    HINTERNET hSession = InternetOpenW(L"AutoFlow/1.0", INTERNET_OPEN_TYPE_DIRECT,
                                         nullptr, nullptr, 0);
     if (!hSession) {
         out.error = QCoreApplication::translate("HttpClient", "InternetOpen 失败").toStdString();

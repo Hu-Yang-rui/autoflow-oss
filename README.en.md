@@ -48,7 +48,7 @@ AutoFlow is a Windows desktop RPA-style tool: drag instruction nodes from the le
 | OCR | Windows built-in OCR (`Windows.Media.Ocr`) | Offline & free, can locate text coordinates |
 | Image recognition | OpenCV (optional) | Template matching, `AUTOPLOW_WITH_OPENCV` flag |
 | Color detection | Win32 (built-in) | No extra dependency |
-| HTTP | WinINET (system API) | Reads the system proxy automatically |
+| HTTP | WinINET (system API) | Built-in |
 | JSON | nlohmann/json | header-only, vendored |
 | Excel | libxlsxwriter (optional) | `AUTOPLOW_WITH_XLSXWRITER` flag |
 | Input simulation | Win32 `SendInput` / `SetCursorPos` | Built-in |

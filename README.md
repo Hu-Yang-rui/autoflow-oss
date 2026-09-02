@@ -48,7 +48,7 @@ AutoFlow 是一款 Windows 桌面端 RPA 类工具：用户从左侧指令面板
 | OCR | Windows 内置 OCR（Windows.Media.Ocr） | 离线免费，可定位文字坐标 |
 | 图像识别 | OpenCV（可选） | 模板匹配找图，`AUTOPLOW_WITH_OPENCV` 开关 |
 | 找色 | Win32（内置） | 无需额外依赖 |
-| HTTP | WinINET（系统 API） | 自动读取系统代理 |
+| HTTP | WinINET（系统 API） | 内置 |
 | JSON | nlohmann/json | header-only，已 vendor |
 | Excel | libxlsxwriter（可选） | `AUTOPLOW_WITH_XLSXWRITER` 开关 |
 | 键鼠模拟 | Win32 `SendInput` / `SetCursorPos` | 内置 |

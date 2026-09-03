@@ -26,6 +26,7 @@ class HotkeyManager;
 class ThemeToggle;
 class TitleBar;
 class DynamicIsland;
+class RunBorder;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -92,6 +93,7 @@ private:
     ThemeToggle* m_themeToggle = nullptr;
     TitleBar* m_titleBar = nullptr;
     DynamicIsland* m_island = nullptr;
+    RunBorder* m_runBorder = nullptr;
     QLabel* m_status = nullptr;
     QLabel* m_zoomLabel = nullptr;
     QLabel* m_nodeCountLabel = nullptr;

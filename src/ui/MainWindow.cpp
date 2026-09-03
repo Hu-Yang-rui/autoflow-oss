@@ -14,6 +14,7 @@
 #include "SettingsDialog.h"
 #include "TemplateDialog.h"
 #include "DynamicIsland.h"
+#include "RunBorder.h"
 #include "../core/Settings.h"
 #include "../instructions/InstructionRegistry.h"
 
@@ -229,6 +230,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
 MainWindow::~MainWindow() {
     if (m_island) { m_island->close(); delete m_island; m_island = nullptr; }
+    if (m_runBorder) { m_runBorder->close(); delete m_runBorder; m_runBorder = nullptr; }
 }
 
 void MainWindow::buildUi() {
@@ -459,6 +461,8 @@ void MainWindow::buildUi() {
 
     // 灵动岛：系统级独立顶层窗口，浮在屏幕顶部居中（不嵌在界面里）
     m_island = new DynamicIsland();   // 无 parent：独立窗口，不跟随 MainWindow 最小化
+    // 执行边框：全屏置顶发光线框，运行流程时显示（初始隐藏）
+    m_runBorder = new RunBorder();
     bottomTab->setMinimumHeight(240);
     midSplit->addWidget(bottomTab);
     midSplit->setStretchFactor(0, 3);
@@ -983,6 +987,12 @@ void MainWindow::updateActionStates() {
 }
 
 void MainWindow::onRunningChanged(bool running) {
+    // 运行/结束时显示/隐藏屏幕边框
+    if (m_runBorder) {
+        if (running) m_runBorder->showOnScreen();
+        else m_runBorder->hide();
+    }
+
     updateActionStates();
     if (m_runStateLabel)
         m_runStateLabel->setText(running ? tr("运行中") : tr("空闲"));

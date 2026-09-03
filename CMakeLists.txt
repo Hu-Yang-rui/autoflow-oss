@@ -59,6 +59,7 @@ set(AUTOPLOW_SOURCES
     src/ui/SettingsDialog.cpp
     src/ui/TemplateDialog.cpp
     src/ui/DynamicIsland.cpp
+    src/ui/RunBorder.cpp
 )
 
 # 翻译（i18n）：源串为中文，英文翻译已预生成并打包进 qrc（":/autoflow_en.qm"）。

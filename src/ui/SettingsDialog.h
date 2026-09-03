@@ -79,6 +79,7 @@ private:
     Stepper* m_clickHoldSpin = nullptr;
     Stepper* m_typeIntervalSpin = nullptr;
     QCheckBox* m_notifyBox = nullptr;
+    QCheckBox* m_runBorderBox = nullptr;
 
     // ---- 网络与识别 ----
     Stepper* m_httpTimeoutSpin = nullptr;

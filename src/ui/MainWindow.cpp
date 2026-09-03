@@ -987,9 +987,9 @@ void MainWindow::updateActionStates() {
 }
 
 void MainWindow::onRunningChanged(bool running) {
-    // 运行/结束时显示/隐藏屏幕边框
+    // 运行/结束时显示/隐藏屏幕边框（受设置开关控制）
     if (m_runBorder) {
-        if (running) m_runBorder->showOnScreen();
+        if (running && Settings::instance().showRunBorder()) m_runBorder->showOnScreen();
         else m_runBorder->hide();
     }
 

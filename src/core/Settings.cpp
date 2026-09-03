@@ -73,6 +73,8 @@ int Settings::inputTypeIntervalMs() const { return read(QStringLiteral("exec/inp
 void Settings::setInputTypeIntervalMs(int v) { write(QStringLiteral("exec/inputTypeIntervalMs"), v); }
 bool Settings::notifyOnFinish() const { return read(QStringLiteral("exec/notifyOnFinish"), false).toBool(); }
 void Settings::setNotifyOnFinish(bool v) { write(QStringLiteral("exec/notifyOnFinish"), v); }
+bool Settings::showRunBorder() const { return read(QStringLiteral("exec/showRunBorder"), true).toBool(); }
+void Settings::setShowRunBorder(bool v) { write(QStringLiteral("exec/showRunBorder"), v); }
 
 // ---- Network ----
 int Settings::httpTimeoutMs() const { return read(QStringLiteral("net/httpTimeoutMs"), 10000).toInt(); }

@@ -62,6 +62,8 @@ public:
     void setInputTypeIntervalMs(int v);
     bool notifyOnFinish() const;                 // "exec/notifyOnFinish" 默认 false
     void setNotifyOnFinish(bool v);
+    bool showRunBorder() const;                  // "exec/showRunBorder" 默认 true（执行时屏幕四周显示边框）
+    void setShowRunBorder(bool v);
 
     // ---- Network ----
     int httpTimeoutMs() const;                   // "net/httpTimeoutMs" 默认 10000

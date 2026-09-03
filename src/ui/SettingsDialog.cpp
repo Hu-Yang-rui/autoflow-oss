@@ -436,6 +436,11 @@ QWidget* SettingsDialog::buildHotkeyTab() {
     m_notifyBox->setChecked(s.notifyOnFinish());
     form->addRow(tr("运行完成通知"), m_notifyBox);
 
+    // 执行时屏幕边框
+    m_runBorderBox = new QCheckBox(tr("执行时在屏幕四周显示发光边框"), page);
+    m_runBorderBox->setChecked(s.showRunBorder());
+    form->addRow(tr("执行边框"), m_runBorderBox);
+
     return page;
 }
 
@@ -595,6 +600,7 @@ void SettingsDialog::accept() {
     s.setInputClickHoldMs((int)m_clickHoldSpin->value());
     s.setInputTypeIntervalMs((int)m_typeIntervalSpin->value());
     s.setNotifyOnFinish(m_notifyBox->isChecked());
+    s.setShowRunBorder(m_runBorderBox->isChecked());
 
     // 网络与识别
     s.setHttpTimeoutMs((int)m_httpTimeoutSpin->value());

@@ -155,12 +155,18 @@ struct KeyPressInstr : IInstruction {
         Meta m;
         m.id = "keypress"; m.category = Category::Input; m.name = QT_TRANSLATE_NOOP("Instructions", "按键");
         m.desc = QT_TRANSLATE_NOOP("Instructions", "按下单个按键，如空格、回车、Tab、方向键");
-        m.params = { Param("key", QT_TRANSLATE_NOOP("Instructions", "按键"), "string", "space",
-                            QT_TRANSLATE_NOOP("Instructions", "支持中文键名：空格/回车/制表/退格/上/下/左/右 等")) };
+        m.params = { Param("key", QT_TRANSLATE_NOOP("Instructions", "按键"), "select", "空格",
+                            QT_TRANSLATE_NOOP("Instructions", "要按下的单个按键"))
+                         .withOptions({
+                             "空格", "回车", "制表", "退格", "删除",
+                             "上", "下", "左", "右", "主页", "结束", "上页", "下页",
+                             "插入", "大写锁定", "退出", "PrintScreen", "ScrollLock", "Pause", "Apps",
+                             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
+                         }) };
         return m;
     }
     std::string execute(ExecutionContext& ctx, const json& params) override {
-        std::string key = ctx.pStr(params, "key", "space");
+        std::string key = ctx.pStr(params, "key", "空格");
         if (!InputSimulator::keyPress(key)) {
             ctx.error = QCoreApplication::translate("Instructions", "无法识别的按键: %1")
                             .arg(QString::fromStdString(key)).toStdString();

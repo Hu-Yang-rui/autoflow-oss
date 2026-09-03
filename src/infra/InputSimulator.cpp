@@ -142,7 +142,9 @@ static WORD keyToVk(const std::string& key) {
 }
 
 bool keyPress(const std::string& key) {
-    WORD vk = keyToVk(key);
+    std::string k = key;
+    std::transform(k.begin(), k.end(), k.begin(), ::tolower);
+    WORD vk = keyToVk(k);
     if (!vk) return false;
     INPUT in[2] = {};
     in[0].type = INPUT_KEYBOARD; in[0].ki.wVk = vk;

@@ -150,6 +150,28 @@ struct KeyboardInstr : IInstruction {
     }
 };
 
+struct KeyPressInstr : IInstruction {
+    Meta meta() const override {
+        Meta m;
+        m.id = "keypress"; m.category = Category::Input; m.name = QT_TRANSLATE_NOOP("Instructions", "按键");
+        m.desc = QT_TRANSLATE_NOOP("Instructions", "按下单个按键，如空格、回车、Tab、方向键");
+        m.params = { Param("key", QT_TRANSLATE_NOOP("Instructions", "按键"), "string", "space",
+                            QT_TRANSLATE_NOOP("Instructions", "支持中文键名：空格/回车/制表/退格/上/下/左/右 等")) };
+        return m;
+    }
+    std::string execute(ExecutionContext& ctx, const json& params) override {
+        std::string key = ctx.pStr(params, "key", "space");
+        if (!InputSimulator::keyPress(key)) {
+            ctx.error = QCoreApplication::translate("Instructions", "无法识别的按键: %1")
+                            .arg(QString::fromStdString(key)).toStdString();
+            return "";
+        }
+        ctx.info(QCoreApplication::translate("Instructions", "按下按键 %1")
+                     .arg(QString::fromStdString(key)).toStdString());
+        return "next";
+    }
+};
+
 struct HotkeyInstr : IInstruction {
     Meta meta() const override {
         Meta m;
@@ -239,6 +261,7 @@ void registerInputInstructions() {
     registerInstruction(std::make_unique<DragInstr>());
     registerInstruction(std::make_unique<GetMousePosInstr>());
     registerInstruction(std::make_unique<KeyboardInstr>());
+    registerInstruction(std::make_unique<KeyPressInstr>());
     registerInstruction(std::make_unique<HotkeyInstr>());
     registerInstruction(std::make_unique<ScrollInstr>());
     registerInstruction(std::make_unique<OpenUrlInstr>());

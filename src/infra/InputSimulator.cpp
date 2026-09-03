@@ -105,17 +105,31 @@ bool mouseWheel(int delta) {
 // 单键映射
 static WORD keyToVk(const std::string& key) {
     static std::map<std::string, WORD> m = {
+        // 英文键名
         {"enter", VK_RETURN}, {"return", VK_RETURN}, {"tab", VK_TAB},
-        {"space", VK_SPACE}, {"esc", VK_ESCAPE}, {"escape", VK_ESCAPE},
+        {"space", VK_SPACE}, {" ", VK_SPACE},
+        {"esc", VK_ESCAPE}, {"escape", VK_ESCAPE},
         {"backspace", VK_BACK}, {"delete", VK_DELETE}, {"del", VK_DELETE},
         {"up", VK_UP}, {"down", VK_DOWN}, {"left", VK_LEFT}, {"right", VK_RIGHT},
         {"home", VK_HOME}, {"end", VK_END}, {"pageup", VK_PRIOR}, {"pagedown", VK_NEXT},
         {"insert", VK_INSERT}, {"capslock", VK_CAPITAL},
+        {"printscreen", VK_SNAPSHOT}, {"scrolllock", VK_SCROLL}, {"pause", VK_PAUSE},
+        {"apps", VK_APPS}, {"menu", VK_APPS},
         {"f1", VK_F1}, {"f2", VK_F2}, {"f3", VK_F3}, {"f4", VK_F4},
         {"f5", VK_F5}, {"f6", VK_F6}, {"f7", VK_F7}, {"f8", VK_F8},
         {"f9", VK_F9}, {"f10", VK_F10}, {"f11", VK_F11}, {"f12", VK_F12},
         {"ctrl", VK_CONTROL}, {"control", VK_CONTROL}, {"shift", VK_SHIFT},
         {"alt", VK_MENU}, {"win", VK_LWIN}, {"windows", VK_LWIN},
+        // 符号键
+        {"-", VK_OEM_MINUS}, {"=", VK_OEM_PLUS}, {"[", VK_OEM_4}, {"]", VK_OEM_6},
+        {"\\", VK_OEM_5}, {";", VK_OEM_1}, {"'", VK_OEM_7}, {",", VK_OEM_COMMA},
+        {".", VK_OEM_PERIOD}, {"/", VK_OEM_2}, {"`", VK_OEM_3},
+        // 中文键名
+        {"空格", VK_SPACE}, {"回车", VK_RETURN}, {"换行", VK_RETURN}, {"制表", VK_TAB},
+        {"退格", VK_BACK}, {"删除", VK_DELETE}, {"上", VK_UP}, {"下", VK_DOWN},
+        {"左", VK_LEFT}, {"右", VK_RIGHT}, {"主页", VK_HOME}, {"结束", VK_END},
+        {"上页", VK_PRIOR}, {"下页", VK_NEXT}, {"插入", VK_INSERT},
+        {"大写锁定", VK_CAPITAL}, {"退出", VK_ESCAPE},
     };
     auto it = m.find(key);
     if (it != m.end()) return it->second;

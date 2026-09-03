@@ -49,6 +49,7 @@ private:
     Stepper* m_fontScaleSpin = nullptr;
     QComboBox* m_themeCombo = nullptr;
     QCheckBox* m_autostartBox = nullptr;
+    QCheckBox* m_autostartSilentBox = nullptr;
     QCheckBox* m_noTutorialBox = nullptr;
     QCheckBox* m_devModeBox = nullptr;
 
@@ -80,6 +81,7 @@ private:
     Stepper* m_typeIntervalSpin = nullptr;
     QCheckBox* m_notifyBox = nullptr;
     QCheckBox* m_runBorderBox = nullptr;
+    QCheckBox* m_silentRunBox = nullptr;
 
     // ---- 网络与识别 ----
     Stepper* m_httpTimeoutSpin = nullptr;

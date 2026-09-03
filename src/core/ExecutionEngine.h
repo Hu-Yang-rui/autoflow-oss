@@ -23,6 +23,7 @@ public:
 
     void setFlow(const FlowModel& flow) { m_flow = flow; }
     void setStepMode(bool on) { m_stepMode = on; }
+    void setSilent(bool on) { m_silent = on; }   // 静默运行：跳过交互类指令
 
 public slots:
     void runFlow(const QString& startNodeId);
@@ -42,6 +43,7 @@ private:
     VariableSystem m_vars;
     std::atomic<bool> m_stop{false};
     bool m_stepMode = false;
+    bool m_silent = false;   // 静默运行
     QMutex m_mutex;
     QWaitCondition m_cond;
     bool m_resume = false;
@@ -63,6 +65,7 @@ public:
 
     void setFlow(const FlowModel& flow) { m_flow = flow; }
     void setStepMode(bool on) { m_stepMode = on; }
+    void setSilent(bool on) { m_silent = on; }   // 静默运行：跳过交互类指令
     bool isRunning() const { return m_running; }
 
 signals:
@@ -85,6 +88,7 @@ private slots:
 private:
     FlowModel m_flow;
     bool m_stepMode = false;
+    bool m_silent = false;
     bool m_running = false;
     std::unique_ptr<EngineWorker> m_worker;
     std::thread m_thread;

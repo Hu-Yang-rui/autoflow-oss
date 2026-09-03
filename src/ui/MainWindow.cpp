@@ -463,6 +463,8 @@ void MainWindow::buildUi() {
     m_island = new DynamicIsland();   // 无 parent：独立窗口，不跟随 MainWindow 最小化
     // 执行边框：全屏置顶发光线框，运行流程时显示（初始隐藏）
     m_runBorder = new RunBorder();
+    // 系统托盘：静默运行/后台时的恢复入口
+    setupTray();
     bottomTab->setMinimumHeight(240);
     midSplit->addWidget(bottomTab);
     midSplit->setStretchFactor(0, 3);
@@ -781,11 +783,52 @@ void MainWindow::runCurrent(const QString& startId) {
     m_canvas->canvasScene()->clearHighlight();
 
     m_engine.setFlow(m_flow);
+    // 静默运行：跳过交互指令（不碰光标），并隐藏主窗口到托盘
+    const bool silent = Settings::instance().runSilent();
+    m_engine.setSilent(silent);
+    if (silent) {
+        hide();
+        if (m_tray) m_tray->showMessage(tr("AutoFlow"),
+                                        tr("已进入静默运行，交互指令将自动跳过"),
+                                        QSystemTrayIcon::Information, 2500);
+    }
     m_engine.startRun(startId);
     m_status->setText(tr("运行中…"));
 }
 
 void MainWindow::stopRun() { m_engine.stop(); }
+
+void MainWindow::setupTray() {
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) return;
+    m_tray = new QSystemTrayIcon(QIcon(":/app_icon.png"), this);
+    m_tray->setToolTip(tr("AutoFlow 可视化自动化工具"));
+
+    auto* menu = new QMenu();
+    QAction* showAct = menu->addAction(tr("显示窗口"));
+    QAction* stopAct = menu->addAction(tr("停止运行"));
+    menu->addSeparator();
+    QAction* quitAct = menu->addAction(tr("退出"));
+
+    connect(showAct, &QAction::triggered, this, [this] {
+        showNormal();
+        raise();
+        activateWindow();
+    });
+    connect(stopAct, &QAction::triggered, this, [this] { stopRun(); });
+    connect(quitAct, &QAction::triggered, qApp, &QApplication::quit);
+
+    m_tray->setContextMenu(menu);
+    connect(m_tray, &QSystemTrayIcon::activated, this, &MainWindow::onTrayActivated);
+    m_tray->show();
+}
+
+void MainWindow::onTrayActivated(QSystemTrayIcon::ActivationReason reason) {
+    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
+        showNormal();
+        raise();
+        activateWindow();
+    }
+}
 
 void MainWindow::stepRun() {
     if (!m_engine.isRunning()) {
@@ -1026,10 +1069,12 @@ void MainWindow::applyAutostart(bool on) {
     QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                   QSettings::NativeFormat);
     if (on) {
-        // 写当前 exe 全路径（统一为反斜杠并加引号，兼容含空格路径）
+        // 写当前 exe 全路径（统一为反斜杠并加引号，兼容含空格路径）；静默自启动附加 --silent
         QString exe = QCoreApplication::applicationFilePath();
         exe.replace('/', '\\');
-        reg.setValue("AutoFlow", QString("\"%1\"").arg(exe));
+        QString cmd = QString("\"%1\"").arg(exe);
+        if (Settings::instance().autostartSilent()) cmd += QStringLiteral(" --silent");
+        reg.setValue("AutoFlow", cmd);
     } else {
         reg.remove("AutoFlow");
     }

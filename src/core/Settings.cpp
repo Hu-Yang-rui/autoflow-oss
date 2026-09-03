@@ -75,6 +75,8 @@ bool Settings::notifyOnFinish() const { return read(QStringLiteral("exec/notifyO
 void Settings::setNotifyOnFinish(bool v) { write(QStringLiteral("exec/notifyOnFinish"), v); }
 bool Settings::showRunBorder() const { return read(QStringLiteral("exec/showRunBorder"), true).toBool(); }
 void Settings::setShowRunBorder(bool v) { write(QStringLiteral("exec/showRunBorder"), v); }
+bool Settings::runSilent() const { return read(QStringLiteral("exec/runSilent"), false).toBool(); }
+void Settings::setRunSilent(bool v) { write(QStringLiteral("exec/runSilent"), v); }
 
 // ---- Network ----
 int Settings::httpTimeoutMs() const { return read(QStringLiteral("net/httpTimeoutMs"), 10000).toInt(); }
@@ -111,5 +113,7 @@ void Settings::setLogToFile(bool v) { write(QStringLiteral("log/toFile"), v); }
 // ---- Autostart ----
 bool Settings::autostart() const { return read(QStringLiteral("system/autostart"), false).toBool(); }
 void Settings::setAutostart(bool v) { write(QStringLiteral("system/autostart"), v); }
+bool Settings::autostartSilent() const { return read(QStringLiteral("system/autostartSilent"), false).toBool(); }
+void Settings::setAutostartSilent(bool v) { write(QStringLiteral("system/autostartSilent"), v); }
 
 } // namespace autoflow

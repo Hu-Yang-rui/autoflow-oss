@@ -1,5 +1,6 @@
 #pragma once
 #include <QMainWindow>
+#include <QSystemTrayIcon>
 #include "../core/FlowModel.h"
 #include "../core/ExecutionEngine.h"
 #include "../core/RunRecord.h"
@@ -60,6 +61,7 @@ private slots:
     void onRunningChanged(bool running);   // 运行/停止状态联动
     void onZoomChanged(qreal level);       // 状态栏缩放比例
     void onCanvasModelChanged();           // 画布模型变化：更新脏标记/节点数/撤销可用性
+    void onTrayActivated(QSystemTrayIcon::ActivationReason reason);   // 托盘图标点击
 
 private:
     void buildUi();
@@ -77,6 +79,7 @@ private:
     QStringList collectValidationErrors() const; // 运行前汇总所有节点的缺失/非法参数
     void updateNodeCount();
     void updateActionStates();    // 依据运行状态与撤销栈刷新动作可用性
+    void setupTray();             // 系统托盘图标 + 菜单
 
     FlowModel m_flow;
     ExecutionEngine m_engine;
@@ -94,6 +97,7 @@ private:
     TitleBar* m_titleBar = nullptr;
     DynamicIsland* m_island = nullptr;
     RunBorder* m_runBorder = nullptr;
+    QSystemTrayIcon* m_tray = nullptr;
     QLabel* m_status = nullptr;
     QLabel* m_zoomLabel = nullptr;
     QLabel* m_nodeCountLabel = nullptr;

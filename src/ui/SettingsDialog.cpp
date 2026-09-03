@@ -127,6 +127,16 @@ QWidget* SettingsDialog::buildGeneralTab() {
         MainWindow::applyAutostart(on);
     });
 
+    // 静默自启动（开机自启后不显示窗口，缩到托盘）
+    m_autostartSilentBox = new QCheckBox(tr("静默自启动（启动后不显示窗口，缩到托盘）"), page);
+    m_autostartSilentBox->setChecked(s.autostartSilent());
+    form->addRow(tr("静默自启动"), m_autostartSilentBox);
+    connect(m_autostartSilentBox, &QCheckBox::toggled, this, [](bool on) {
+        Settings::instance().setAutostartSilent(on);
+        // 若已开启自启，立即用新的静默参数重写 Run 键
+        if (Settings::instance().autostart()) MainWindow::applyAutostart(true);
+    });
+
     // 不再显示新手教程（沿用旧对话框的 QSettings 键 tutorial/dontShow）
     m_noTutorialBox = new QCheckBox(tr("不再显示新手教程"), page);
     m_noTutorialBox->setChecked(QSettings("AutoFlow", "AutoFlow")
@@ -441,6 +451,11 @@ QWidget* SettingsDialog::buildHotkeyTab() {
     m_runBorderBox->setChecked(s.showRunBorder());
     form->addRow(tr("执行边框"), m_runBorderBox);
 
+    // 静默运行：跳过交互指令（点击/输入），不碰光标
+    m_silentRunBox = new QCheckBox(tr("静默运行（跳过点击/输入等交互指令，不碰光标）"), page);
+    m_silentRunBox->setChecked(s.runSilent());
+    form->addRow(tr("静默运行"), m_silentRunBox);
+
     return page;
 }
 
@@ -601,6 +616,7 @@ void SettingsDialog::accept() {
     s.setInputTypeIntervalMs((int)m_typeIntervalSpin->value());
     s.setNotifyOnFinish(m_notifyBox->isChecked());
     s.setShowRunBorder(m_runBorderBox->isChecked());
+    s.setRunSilent(m_silentRunBox->isChecked());
 
     // 网络与识别
     s.setHttpTimeoutMs((int)m_httpTimeoutSpin->value());

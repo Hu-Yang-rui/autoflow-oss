@@ -64,6 +64,8 @@ public:
     void setNotifyOnFinish(bool v);
     bool showRunBorder() const;                  // "exec/showRunBorder" 默认 true（执行时屏幕四周显示边框）
     void setShowRunBorder(bool v);
+    bool runSilent() const;                      // "exec/runSilent" 默认 false（静默运行：跳过点击/输入等交互指令，不碰光标）
+    void setRunSilent(bool v);
 
     // ---- Network ----
     int httpTimeoutMs() const;                   // "net/httpTimeoutMs" 默认 10000
@@ -100,6 +102,8 @@ public:
     // ---- Autostart ----
     bool autostart() const;                      // "system/autostart" 默认 false
     void setAutostart(bool v);
+    bool autostartSilent() const;                // "system/autostartSilent" 默认 false（开机自启动后静默，不显示窗口）
+    void setAutostartSilent(bool v);
 
 private:
     Settings();

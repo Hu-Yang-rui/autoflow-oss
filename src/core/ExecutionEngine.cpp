@@ -1,8 +1,19 @@
 #include "ExecutionEngine.h"
 #include "Settings.h"
 #include <QCoreApplication>
+#include <set>
 
 namespace autoflow {
+
+namespace {
+// 交互类指令（会移动光标/操作键盘）：静默运行时跳过
+bool isInteractiveInstr(const std::string& id) {
+    static const std::set<std::string> s = {
+        "click", "move", "drag", "scroll", "keyboard", "keypress", "hotkey"
+    };
+    return s.count(id) > 0;
+}
+} // namespace
 
 // ============================ EngineWorker ============================
 
@@ -146,6 +157,16 @@ void EngineWorker::runFlow(const QString& startNodeId) {
             continue;
         }
 
+        // 静默运行：跳过交互类指令（点击/输入等会碰光标），不打扰用户
+        if (m_silent && isInteractiveInstr(node->instr)) {
+            emit logMessage("warn", QString::fromStdString(node->id), nodeName,
+                            tr("静默运行：已跳过该交互指令（不碰光标）"));
+            ++total;
+            if (node->instr == "end") break;
+            cur = nextNodeId(m_flow, *node, "next", "");
+            continue;
+        }
+
         ExecutionContext ctx(m_vars);
         ctx.log = [this, id = node->id, nodeName](const std::string& lvl, const std::string& msg) {
             emit logMessage(QString::fromStdString(lvl), QString::fromStdString(id),
@@ -242,6 +263,7 @@ void ExecutionEngine::startRun(const QString& startNodeId) {
 
     m_worker->setFlow(m_flow);
     m_worker->setStepMode(m_stepMode);
+    m_worker->setSilent(m_silent);
     m_running = true;
     emit runningChanged(true);
 

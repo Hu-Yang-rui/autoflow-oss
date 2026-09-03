@@ -532,11 +532,20 @@ int main(int argc, char** argv) {
     applySmileySansFont();
     ThemeManager::instance().setDark(true);
 
+    // 静默启动（--silent）：不显示主窗口，进入静默运行模式（缩到托盘，交互指令自动跳过）
+    bool silentStart = false;
+    for (int i = 1; i < argc; ++i) {
+        if (std::string(argv[i]) == "--silent") { silentStart = true; break; }
+    }
+    if (silentStart) Settings::instance().setRunSilent(true);
+
     MainWindow w;
     w.resize(1440, 860);
-    w.show();
-    // 恢复上次保存的窗口几何；无记录时保持 1440x860 默认
-    const QByteArray geo = QSettings("AutoFlow", "AutoFlow").value("window/geometry").toByteArray();
-    if (!geo.isEmpty()) w.restoreGeometry(geo);
+    if (!silentStart) {
+        w.show();
+        // 恢复上次保存的窗口几何；无记录时保持 1440x860 默认
+        const QByteArray geo = QSettings("AutoFlow", "AutoFlow").value("window/geometry").toByteArray();
+        if (!geo.isEmpty()) w.restoreGeometry(geo);
+    }
     return app.exec();
 }

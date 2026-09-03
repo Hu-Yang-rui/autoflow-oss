@@ -7,7 +7,9 @@
 #include <QScreen>
 #include <QTimer>
 #include <QHideEvent>
+#include <QLinearGradient>
 #include <cmath>
+#include <algorithm>
 
 namespace autoflow {
 
@@ -29,9 +31,6 @@ RunBorder::RunBorder(QWidget* parent)
 void RunBorder::showOnScreen() {
     if (QScreen* s = QApplication::primaryScreen()) {
         setGeometry(s->geometry());
-        // 读取屏幕参数：按物理 DPI 计算边框粗细比例（高 DPI 下加粗，避免比例失调）
-        const qreal dpi = s->physicalDotsPerInch();
-        m_scale = qBound(1.0, dpi / 96.0, 2.0);
     }
     m_phase = 0.0;
     show();
@@ -49,30 +48,42 @@ void RunBorder::paintEvent(QPaintEvent*) {
     const bool dark = ThemeManager::instance().isDark();
     const QColor base = Palette::accent(dark);
 
-    // 呼吸脉动：0.25 ~ 1.0，让发光有节奏地起伏
-    const qreal pulse = 0.3 + 0.7 * (0.5 + 0.5 * std::sin(m_phase));
+    // 呼吸脉动：0.4 ~ 1.0
+    const qreal pulse = 0.4 + 0.6 * (0.5 + 0.5 * std::sin(m_phase));
 
-    const int m = (int)std::lround(18.0 * m_scale);      // 边框距屏幕边缘
-    QRect r = rect().adjusted(m, m, -m, -m);
+    const int W = width(), H = height();
+    // 光带向内扩散宽度：与屏幕短边成比例，任何分辨率下比例都协调
+    const int band = std::max(30, (int)std::lround(std::min(W, H) * 0.05));
 
-    // 光晕：向屏幕内侧多层扩散，透明度随呼吸脉动（由浓到淡）
-    const int N = 24;
-    for (int i = 0; i < N; ++i) {
-        int alpha = (int)std::lround((88 - i * 3.6) * pulse);
-        alpha = qBound(0, alpha, 255);
-        QColor c = base;
-        c.setAlpha(alpha);
-        int w = (int)std::lround(2.0 * m_scale);
-        p.setPen(QPen(c, w));
-        int off = (int)std::lround(i * 1.2 * m_scale);
-        p.drawRect(r.adjusted(off, off, -off, -off));
+    QColor c0 = base; c0.setAlpha((int)std::lround(165 * pulse));   // 边缘最亮
+    QColor c1 = base; c1.setAlpha((int)std::lround(40 * pulse));    // 中间衰减
+    QColor c2 = base; c2.setAlpha(0);                               // 末端透明
+
+    // 四边柔和渐变光带（从屏幕边缘向内平滑晕开，无硬边）
+    // 上边
+    {
+        QLinearGradient g(0, 0, 0, band);
+        g.setColorAt(0.0, c0); g.setColorAt(0.55, c1); g.setColorAt(1.0, c2);
+        p.fillRect(QRect(0, 0, W, band), g);
     }
-
-    // 主体高亮边框（最亮，随呼吸微微变化）
-    QColor hi = base.lighter(165);
-    hi.setAlpha((int)std::lround(235 * (0.75 + 0.25 * pulse)));
-    p.setPen(QPen(hi, (int)std::lround(3.0 * m_scale)));
-    p.drawRect(r);
+    // 下边
+    {
+        QLinearGradient g(0, H, 0, H - band);
+        g.setColorAt(0.0, c0); g.setColorAt(0.55, c1); g.setColorAt(1.0, c2);
+        p.fillRect(QRect(0, H - band, W, band), g);
+    }
+    // 左边
+    {
+        QLinearGradient g(0, 0, band, 0);
+        g.setColorAt(0.0, c0); g.setColorAt(0.55, c1); g.setColorAt(1.0, c2);
+        p.fillRect(QRect(0, 0, band, H), g);
+    }
+    // 右边
+    {
+        QLinearGradient g(W, 0, W - band, 0);
+        g.setColorAt(0.0, c0); g.setColorAt(0.55, c1); g.setColorAt(1.0, c2);
+        p.fillRect(QRect(W - band, 0, band, H), g);
+    }
 }
 
 } // namespace autoflow

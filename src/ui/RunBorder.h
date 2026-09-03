@@ -5,7 +5,7 @@ class QTimer;
 
 namespace autoflow {
 
-// 执行时的屏幕边框：全屏置顶、鼠标穿透、四周发光线框 + 呼吸动画
+// 执行时的屏幕边框：全屏置顶、鼠标穿透、四周柔和渐变光带 + 呼吸动画
 class RunBorder : public QWidget {
     Q_OBJECT
 public:
@@ -21,7 +21,6 @@ protected:
 private:
     QTimer* m_timer = nullptr;
     qreal m_phase = 0.0;    // 呼吸动画相位
-    qreal m_scale = 1.0;    // 屏幕 DPI 缩放比例（线宽/边距据此放大）
 };
 
 } // namespace autoflow

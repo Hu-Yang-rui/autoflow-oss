@@ -154,19 +154,22 @@ struct KeyPressInstr : IInstruction {
     Meta meta() const override {
         Meta m;
         m.id = "keypress"; m.category = Category::Input; m.name = QT_TRANSLATE_NOOP("Instructions", "按键");
-        m.desc = QT_TRANSLATE_NOOP("Instructions", "按下单个按键，如空格、回车、Tab、方向键");
-        m.params = { Param("key", QT_TRANSLATE_NOOP("Instructions", "按键"), "select", "空格",
-                            QT_TRANSLATE_NOOP("Instructions", "要按下的单个按键"))
-                         .withOptions({
-                             "空格", "回车", "制表", "退格", "删除",
-                             "上", "下", "左", "右", "主页", "结束", "上页", "下页",
-                             "插入", "大写锁定", "退出", "PrintScreen", "ScrollLock", "Pause", "Apps",
-                             "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"
-                         }) };
+        m.desc = QT_TRANSLATE_NOOP("Instructions", "按下单个按键，从下拉列表中选择");
+        m.params = {
+            Param("key", QT_TRANSLATE_NOOP("Instructions", "按键"), "select", "space",
+                  QT_TRANSLATE_NOOP("Instructions", "选择要按下的按键"))
+                .withOptions({
+                    "space", "enter", "tab", "backspace", "delete",
+                    "up", "down", "left", "right", "home", "end", "pageup", "pagedown",
+                    "insert", "capslock", "esc", "printscreen", "scrolllock", "pause", "apps",
+                    "f1", "f2", "f3", "f4", "f5", "f6",
+                    "f7", "f8", "f9", "f10", "f11", "f12"
+                })
+        };
         return m;
     }
     std::string execute(ExecutionContext& ctx, const json& params) override {
-        std::string key = ctx.pStr(params, "key", "空格");
+        std::string key = ctx.pStr(params, "key", "space");
         if (!InputSimulator::keyPress(key)) {
             ctx.error = QCoreApplication::translate("Instructions", "无法识别的按键: %1")
                             .arg(QString::fromStdString(key)).toStdString();
